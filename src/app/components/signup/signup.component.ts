@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { Credentials } from '../login-form/credentials-model';
 import { Subscription } from 'rxjs/Subscription'
@@ -18,7 +17,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   firstAttempt: boolean;
   isLoading: boolean;
 
-  constructor(private _fb: FormBuilder, private _authService: AuthService, private _router: Router) { }
+  constructor(private _authService: AuthService, private _router: Router) { }
 
   ngOnInit() {
     this.firstAttempt = true;

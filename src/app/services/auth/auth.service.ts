@@ -40,7 +40,7 @@ export class AuthService {
         this.logout();
   }
 
-  setLoggedIn(value: boolean)
+  private setLoggedIn(value: boolean)
   {
     // Update login status subject
     this.isLoggedIn$.next(value);
@@ -79,7 +79,7 @@ export class AuthService {
       });
   }
 
-  handleAuth(authResult )
+  private handleAuth(authResult )
   {
     // When Auth0 hash parsed, get profile
     if (authResult && authResult.accessToken && authResult.idToken)
