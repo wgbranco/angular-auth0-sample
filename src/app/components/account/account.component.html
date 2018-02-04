@@ -1,0 +1,16 @@
+<div
+  class="vertical_box">
+
+  <div
+    class="bordered_box horiontal_box">
+    <img [src]="userData.picture">
+
+    <p
+      class="account_email">
+      {{userData.email}}
+    </p>
+  </div>
+
+  <button type="button" (click)='logout()'>logout</button>
+
+</div>

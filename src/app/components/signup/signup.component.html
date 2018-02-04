@@ -1,0 +1,15 @@
+<div class="vertical_box">
+
+  <login-form [locked]="isLoading" (onClickSubmit)="onSubmit($event)"></login-form>
+
+  <br/>
+
+  <div *ngIf="errorOnSignUp"
+    class="vertical_box msg_box error_msg">
+    An error occured. Please, try again.
+  </div>
+
+  <br>
+
+  <a routerLink="/login"> Already have an account? Log in!</a>
+</div>
