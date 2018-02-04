@@ -1,0 +1,53 @@
+* {
+  font-family: monospace;
+  font-size: 1.1em;
+}
+
+.logo {
+  width: 65px;
+  height: 65px;
+}
+
+.error_msg {
+  font-size: 0.9em;
+}
+
+.msg_box {
+  max-width: 350px;
+  text-align: center;
+}
+
+.vertical_box {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.horizontal_box {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.bordered_box {
+  display: flex;
+  align-items: start;
+  margin: 25px;
+  padding: 15px;
+  background-color: #fffdf9;
+  border: 1px solid #bdbdbd;
+  border-radius: 20px;
+}
+
+.account_email {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #2b2723;
+  margin-left: 30px;
+}
+
+.form_label {
+  font-weight: bold;
+  font-size: 0.85em;
+}
