@@ -1,10 +1,10 @@
 <div class="vertical_box">
 
-  <login-form [locked]="isLoading" (onClickSubmit)="onSubmit($event)"></login-form>
+  <login-form [buttonLabel]="'Sign Up'" [locked]="isLoading" (onClickSubmit)="onSubmit($event)"></login-form>
 
   <br/>
 
-  <div *ngIf="errorOnSignUp"
+  <div *ngIf="errorOnSignUp && !isLoading"
     class="vertical_box msg_box error_msg">
     An error occured. Please, try again.
   </div>

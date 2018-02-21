@@ -12,35 +12,31 @@ import { EventEmitter } from '@angular/core';
 @Injectable()
 export class AuthService {
 
-  API_BASE_URL = `https://${AUTH_CONFIG.CLIENT_DOMAIN}`;
-  LOGIN_URL = `${this.API_BASE_URL}/oauth/token`;
-  SIGNUP_URL = `${this.API_BASE_URL}/dbconnections/signup`;
-
-  webAuth = new auth0.WebAuth({
+  webAuth:any = new auth0.WebAuth({
     clientID: AUTH_CONFIG.CLIENT_ID,
     domain: AUTH_CONFIG.CLIENT_DOMAIN,
     scope: AUTH_CONFIG.SCOPE
   });
 
-  userProfile: any;
-
   // Create a stream of logged in status to communicate throughout app
-  isLoggedIn$ = new BehaviorSubject<boolean>(false);
-  signupSucess$ = new BehaviorSubject<boolean>(false);
+  isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  userProfile: any;
 
   // Methods
   constructor(private _router: Router, private _http: HttpClient) {
     // If authenticated, set local profile property and update login status subject
     // If token is expired, log out to clear any data from localStorage
-    if (this.authenticated) {
-        this.userProfile = JSON.parse(localStorage.getItem('profile'));
-        this.setLoggedIn(true);
-    }
-    else
-        this.logout();
+    this.authenticated ? this._setupUserProfile() : this.logout();
   }
 
-  private setLoggedIn(value: boolean)
+  private _setupUserProfile()
+  {
+    this.userProfile = JSON.parse(localStorage.getItem('profile'));
+    this._setLoggedIn(this.authenticated);
+  }
+
+  private _setLoggedIn(value: boolean)
   {
     // Update login status subject
     this.isLoggedIn$.next(value);
@@ -56,14 +52,14 @@ export class AuthService {
     },
       (err, authResult) => {
         if (err)
-          this.setLoggedIn(false);
+          this._setLoggedIn(false);
         else if (authResult)
-          this.handleAuth(authResult);
+          this._handleAuth(authResult);
       }
     );
   }
 
-  signUp(credentials: Credentials)
+  signUp(credentials: Credentials, callback: Function)
   {
       this.webAuth.signup({
         connection: AUTH_CONFIG.CONNECTION,
@@ -75,18 +71,26 @@ export class AuthService {
           alert('The e-mail address you have entered is already registered!');
 
         const success = (!res) || (200 === res.statusCode);
-        this.signupSucess$.next(success);
+        //this.signupSucess$.next(success);
+        if (callback) callback(success);
       });
   }
 
-  private handleAuth(authResult )
+  logout()
+  {
+    this._clearSession();
+    this._setupUserProfile();
+    this._router.navigate(['/login']);
+  }
+
+  private _handleAuth(authResult )
   {
     // When Auth0 hash parsed, get profile
     if (authResult && authResult.accessToken && authResult.idToken)
-      this._getProfile(authResult);
+      this._getUserInfo(authResult);
   }
 
-  private _getProfile(authResult)
+  private _getUserInfo(authResult)
   {
     // Use access token to retrieve user's profile and set session
     this.webAuth.client.userInfo(authResult.accessToken, (err, profile) => {
@@ -96,26 +100,27 @@ export class AuthService {
 
   private _setSession(authResult, profile)
   {
+    this._createSession(authResult, profile);
+    this._setupUserProfile();
+  }
+
+  private _createSession(authResult, profile)
+  {
     const expTime = authResult.expiresIn * 1000 + Date.now();
     // Save session data and update login status subject
     localStorage.setItem('token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('profile', JSON.stringify(profile));
     localStorage.setItem('expires_at', JSON.stringify(expTime));
-    this.userProfile = profile;
-    this.setLoggedIn(true);
   }
 
-  logout()
+  private _clearSession()
   {
     // Remove tokens and profile and update login status subject
     localStorage.removeItem('token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('profile');
     localStorage.removeItem('expires_at');
-    this.userProfile = undefined;
-    this.setLoggedIn(false);
-    this._router.navigate(['/login']);
   }
 
   get authenticated(): boolean

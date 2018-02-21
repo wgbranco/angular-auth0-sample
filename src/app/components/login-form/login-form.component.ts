@@ -9,6 +9,7 @@ import { Credentials } from '../login-form/credentials-model';
 })
 export class LoginFormComponent implements OnInit {
   @Input() locked: boolean;
+  @Input() buttonLabel: string;
   @Output() onClickSubmit = new EventEmitter<Credentials>();
 
   credentialsForm: FormGroup;

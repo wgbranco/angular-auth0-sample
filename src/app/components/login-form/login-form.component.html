@@ -15,8 +15,8 @@
 
     <br/>
 
-    <button type="submit" [disabled]="!credentialsForm.valid || locked">
-      Login
+    <button id="submitButton" type="submit" [disabled]="!credentialsForm.valid || locked">
+      {{buttonLabel}}
     </button>
   </form>
 

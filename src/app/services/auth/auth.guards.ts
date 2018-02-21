@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 
+
 @Injectable()
 export class AuthGuard implements CanActivate {
 
@@ -20,7 +21,6 @@ export class AuthGuard implements CanActivate {
     }
     return true;
   }
-
 }
 
 @Injectable()
@@ -32,12 +32,11 @@ export class LoggedOutGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    if (this._authService.authenticated)
-    {
-      this._router.navigate(['']);
-      return false;
-    }
-    return true;
+      if (this._authService.authenticated)
+      {
+        this._router.navigate(['']);
+        return false;
+      }
+      return true;
   }
-
 }

@@ -1,10 +1,10 @@
 <div class="vertical_box">
 
-  <login-form [locked]="isLoading" (onClickSubmit)="onSubmit($event)"></login-form>
+  <login-form [buttonLabel]="'Login'" [locked]="isLoading" (onClickSubmit)="onSubmit($event)"></login-form>
 
   <br/>
 
-  <div *ngIf="errorOnLogin"
+  <div *ngIf="errorOnLogin && !isLoading"
     class="vertical_box msg_box error_msg">
     There was an error with your e-mail/password combination.
     Please, try again or sign up on the link bellow!

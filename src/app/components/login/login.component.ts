@@ -1,6 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { Credentials } from '../login-form/credentials-model';
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/do';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import "rxjs/add/operator/withLatestFrom";
 import { Subscription } from 'rxjs/Subscription'
 import { Router } from '@angular/router';
 
@@ -14,24 +18,32 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   loginSubs: Subscription;
   errorOnLogin: boolean;
-  firstAttempt: boolean;
   isLoading: boolean;
+  submitClick$: Observable<MouseEvent>;
+  login$: Observable<any>;
 
   constructor(private _authService: AuthService, private _router: Router) { }
 
-  ngOnInit() {
-    this.firstAttempt = true;
+  ngOnInit()
+  {
+    const button = document.getElementById('submitButton');
+    this.submitClick$ = fromEvent(button, 'click');
+
+    this.login$ = this._authService.isLoggedIn$.withLatestFrom(
+                  this.submitClick$,
+                  (loginStatus, click) => loginStatus);
+
+    this.subscribeToLoginStream();
   }
 
   subscribeToLoginStream()
   {
     if (!this.loginSubs)
     {
-      this.loginSubs = this._authService.isLoggedIn$.subscribe(
+      this.loginSubs = this.login$.subscribe(
         status => {
-          if (!this.firstAttempt) this.isLoading = false;
-          this.errorOnLogin = !status && !this.firstAttempt;
-          this.firstAttempt = false;
+          this.isLoading = false;
+          this.errorOnLogin = !status;
           if (status) this._router.navigate(['/account']);
         }
       );
@@ -41,7 +53,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit(credentials:Credentials)
   {
     this.isLoading = true;
-    this.subscribeToLoginStream();
     this._authService.login(credentials);
   }
 
