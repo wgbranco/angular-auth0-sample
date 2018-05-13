@@ -1,0 +1,17 @@
+@import '~sass/variables';
+
+:host, .vertical_box {
+    width: 100%;
+    height: 100%;
+}
+
+.painel_footer {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}

@@ -1,30 +1,42 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
+import { routes } from './app.routes';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { AppComponent } from './app.component';
-import { AccountComponent } from './components/account/account.component';
-import { LoginComponent } from './components/login/login.component';
-import { SignUpComponent } from './components/signup/signup.component';
-import { AuthService } from './services/auth/auth.service';
-import { LoginFormComponent } from './components/login-form/login-form.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+
+import { RootComponent } from './modules/core/components/root/root.component';
+import { CoreModule } from './modules/core/core.module';
+import { RouterModule } from '@angular/router';
+import { AuthModule } from './modules/auth/auth.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AccountComponent,
-    LoginComponent,
-    SignUpComponent,
-    LoginFormComponent
-  ],
+  declarations: [ ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes, {useHash: true}),
+
+    // ngrx modules
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([]),
+
+    // Instrumentation must be imported after importing StoreModule (config is optional)
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
+
+    // Feature modules
+    CoreModule.forRoot(),
+    AuthModule.forRoot(),
   ],
-  providers: [AuthService],
-  bootstrap: [AppComponent]
+  providers: [ ],
+  bootstrap: [ RootComponent ]
 })
 export class AppModule { }

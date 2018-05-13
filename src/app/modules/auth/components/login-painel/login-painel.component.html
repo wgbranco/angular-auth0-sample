@@ -1,0 +1,18 @@
+<div class="vertical_box">
+
+  <credentials-form
+    [buttonLabel]="'Login'"
+    [pending]="pending$ | async"
+    (onSubmit)="onSubmit($event)">
+  </credentials-form>
+
+  <div class="painel_footer">
+    <p
+      *ngIf="showError$ | async">
+      {{errorMsg$ | async}}
+    </p>
+
+    <a [routerLink]="['/signup']"> Still don't have an account? Sign up!</a>
+  </div>
+
+</div>

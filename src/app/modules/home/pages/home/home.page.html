@@ -1,0 +1,25 @@
+<div class="page horizontal_box">
+
+  <div class="main_container padded bordered centralized_content">
+    <p *ngIf="isLoggedIn$ | async">
+      user logged in
+    </p>
+
+    <p *ngIf="!(isLoggedIn$ | async)">
+      user NOT logged in
+    </p>
+  </div>
+
+  <div class="main_container padded">
+    <div *ngIf="isLoggedIn$ | async">
+      
+      <profile></profile>
+    
+    </div>
+
+    <div *ngIf="!(isLoggedIn$ | async)">
+      <login-painel></login-painel>
+    </div>
+  </div>
+
+</div>

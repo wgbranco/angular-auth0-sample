@@ -1,0 +1,12 @@
+@import '~sass/variables';
+
+p {
+    font-size: $mainContainerWidth/4;
+    font-weight: 400;
+}
+
+.main-container {
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+}
